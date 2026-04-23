@@ -27,6 +27,11 @@ class AppConfig {
     defaultValue: '',
   );
 
+  static const String sentryDsn = String.fromEnvironment(
+    'SENTRY_DSN',
+    defaultValue: '',
+  );
+
   static const bool isDev = bool.fromEnvironment(
     'IS_DEV',
     defaultValue: true,

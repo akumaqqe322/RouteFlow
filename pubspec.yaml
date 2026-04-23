@@ -35,6 +35,9 @@ dependencies:
   # Subscriptions
   purchases_flutter: ^7.0.0
 
+  # Monitoring
+  sentry_flutter: ^8.0.0
+
   # Models & Core
   equatable: ^2.0.5
 
