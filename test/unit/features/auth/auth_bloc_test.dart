@@ -8,15 +8,13 @@ import 'package:route_flow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:route_flow/features/auth/presentation/bloc/auth_state.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
-class MockUser extends Mock implements AuthUser {}
 
 void main() {
   late AuthRepository repository;
-  late AuthUser user;
+  const user = AuthUser(id: '1', email: 'test@example.com');
 
   setUp(() {
     repository = MockAuthRepository();
-    user = MockUser();
     
     // Default mock behavior
     when(() => repository.onAuthStateChanged).thenAnswer((_) => Stream.value(null));

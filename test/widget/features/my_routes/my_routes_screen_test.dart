@@ -27,11 +27,49 @@ void main() {
   });
 
   group('MyRoutesScreen Widget Test', () {
-    // ... existing tests
+    testWidgets('should display empty state message when no routes', (tester) async {
+      when(() => savedRoutesBloc.state).thenReturn(const SavedRoutesState(
+        status: SavedRoutesStatus.success,
+        routes: [],
+      ));
+
+      await tester.pumpApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: savedRoutesBloc),
+            BlocProvider.value(value: routeBloc),
+          ],
+          child: const MyRoutesScreen(),
+        ),
+      );
+
+      expect(find.byType(ListView), findsNothing);
+    });
+
+    testWidgets('should display error state when storage fails', (tester) async {
+      when(() => savedRoutesBloc.state).thenReturn(const SavedRoutesState(
+        status: SavedRoutesStatus.failure,
+        error: 'storage_error',
+        routes: [],
+      ));
+
+      await tester.pumpApp(
+        MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: savedRoutesBloc),
+            BlocProvider.value(value: routeBloc),
+          ],
+          child: const MyRoutesScreen(),
+        ),
+      );
+
+      expect(find.byIcon(Icons.error_outline), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
+    });
   });
 
   group('MyRoutesScreen Golden Test', () {
-    testGoldens('should match golden for empty and error state', (tester) async {
+    testGoldens('should match golden for empty state', (tester) async {
       final builder = GoldenBuilder.column()
         ..addScenario(
           'Empty State',
@@ -65,51 +103,6 @@ void main() {
       );
       
       await screenMatchesGolden(tester, 'my_routes_empty');
-    });
-  });
-}
-    testWidgets('should display empty state message when no routes', (tester) async {
-      when(() => savedRoutesBloc.state).thenReturn(const SavedRoutesState(
-        status: SavedRoutesStatus.success,
-        routes: [],
-      ));
-
-      await tester.pumpApp(
-        MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: savedRoutesBloc),
-            BlocProvider.value(value: routeBloc),
-          ],
-          child: const MyRoutesScreen(),
-        ),
-      );
-
-      // Verify empty state is shown
-      // Instead of hardcoded text, we can look for types or icons if available, 
-      // but finding by text from l10n is standard if we use pumpApp helper
-      expect(find.byIcon(Icons.route_outlined), findsNothing);
-      expect(find.byType(ListView), findsNothing);
-    });
-
-    testWidgets('should display error state when storage fails', (tester) async {
-      when(() => savedRoutesBloc.state).thenReturn(const SavedRoutesState(
-        status: SavedRoutesStatus.failure,
-        error: 'storage_error',
-        routes: [],
-      ));
-
-      await tester.pumpApp(
-        MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: savedRoutesBloc),
-            BlocProvider.value(value: routeBloc),
-          ],
-          child: const MyRoutesScreen(),
-        ),
-      );
-
-      expect(find.byIcon(Icons.error_outline), findsOneWidget);
-      expect(find.byType(ElevatedButton), findsOneWidget);
     });
   });
 }

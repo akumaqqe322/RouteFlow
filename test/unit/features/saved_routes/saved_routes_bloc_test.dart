@@ -16,13 +16,16 @@ void main() {
   late SavedRoutesBloc bloc;
 
   setUpAll(() {
+    final now = DateTime.now();
     registerFallbackValue(SavedRoute(
       id: '',
+      userId: 'test_user',
       title: '',
-      points: [],
+      points: const [],
       distance: 0,
       duration: 0,
-      createdAt: DateTime.now(),
+      createdAt: now,
+      updatedAt: now,
       isFavorite: false,
       startLat: 0,
       startLng: 0,
@@ -37,13 +40,16 @@ void main() {
   });
 
   group('SavedRoutesBloc', () {
+    final now = DateTime.now();
     final testRoute = SavedRoute(
       id: '1',
+      userId: 'test_user',
       title: 'Test Route',
-      points: [],
+      points: const [],
       distance: 1000,
       duration: 600,
-      createdAt: DateTime(2024, 1, 1),
+      createdAt: now,
+      updatedAt: now,
       isFavorite: false,
       startLat: 0,
       startLng: 0,

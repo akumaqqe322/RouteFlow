@@ -22,7 +22,6 @@ void main() {
     testWidgets('should display setup unavailable message when config is missing', (tester) async {
       when(() => premiumBloc.state).thenReturn(
         const PremiumState(
-          status: null, // Initial or any
           error: 'premium_config_missing',
         ),
       );

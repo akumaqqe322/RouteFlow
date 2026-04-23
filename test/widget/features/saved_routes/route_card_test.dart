@@ -6,13 +6,16 @@ import 'package:route_flow/features/saved_routes/presentation/widgets/route_card
 import '../../../helpers/pump_app.dart';
 
 void main() {
+  final now = DateTime.now();
   final testRoute = SavedRoute(
     id: '1',
+    userId: 'test_user',
     title: 'Morning Run',
-    points: [],
+    points: const [],
     distance: 5000,
     duration: 1800,
-    createdAt: DateTime(2024, 1, 1, 10, 30),
+    createdAt: now,
+    updatedAt: now,
     isFavorite: false,
     startLat: 0,
     startLng: 0,
