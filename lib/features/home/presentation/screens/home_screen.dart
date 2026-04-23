@@ -50,7 +50,31 @@ class _HomeScreenState extends State<HomeScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: BlocBuilder<LocationBloc, LocationState>(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<LocationBloc, LocationState>(
+            listener: (context, state) {
+              if (state.status == LocationStatus.success && state.location != null) {
+                _mapController.move(
+                  LatLng(state.location!.latitude, state.location!.longitude),
+                  15.0,
+                );
+              }
+            },
+          ),
+          BlocListener<RouteBloc, RouteState>(
+            listener: (context, state) {
+              if (state.status == RouteStatus.success && state.route != null) {
+                // Determine the center to move to
+                final center = state.destination ?? 
+                  state.route!.points[state.route!.points.length ~/ 2];
+                
+                _mapController.move(center, 14.0);
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<LocationBloc, LocationState>(
         builder: (context, locationState) {
           if (locationState.status == LocationStatus.loading && locationState.location == null) {
             return const Center(child: CircularProgressIndicator());

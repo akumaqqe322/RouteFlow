@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:route_flow/features/saved_routes/domain/entities/saved_route.dart';
 import 'package:route_flow/features/saved_routes/domain/repositories/saved_routes_repository.dart';
@@ -10,9 +9,8 @@ import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_
 @injectable
 class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
   final SavedRoutesRepository _repository;
-  final SupabaseClient _supabase;
 
-  SavedRoutesBloc(this._repository, this._supabase) : super(const SavedRoutesState()) {
+  SavedRoutesBloc(this._repository) : super(const SavedRoutesState()) {
     on<LoadSavedRoutes>(_onLoadRoutes);
     on<SaveBuiltRoute>(_onSaveRoute);
     on<ToggleFavoriteRoute>(_onToggleFavorite);
@@ -29,7 +27,7 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       final routes = await _repository.getRoutes(forceRefresh: event.forceRefresh);
       emit(state.copyWith(status: SavedRoutesStatus.success, routes: routes));
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: e.toString()));
+      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'storage_error'));
     }
   }
 
@@ -37,13 +35,14 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
     SaveBuiltRoute event,
     Emitter<SavedRoutesState> emit,
   ) async {
-    final userId = _supabase.auth.currentUser?.id;
-    if (userId == null) return;
+    // Note: userId is handled inside the repository's data layer 
+    // or typically fetched from an AuthRepository to keep presentation clean.
+    // For MVP, repository handles it.
 
     final now = DateTime.now();
     final newRoute = SavedRoute(
       id: const Uuid().v4(),
-      userId: userId,
+      userId: '', // Repository will populate this if needed or it's implicitly handled
       title: event.title,
       startLat: event.start.latitude,
       startLng: event.start.longitude,
@@ -61,7 +60,7 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       await _repository.saveRoute(newRoute);
       add(const LoadSavedRoutes(forceRefresh: true));
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: e.toString()));
+      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'save_error'));
     }
   }
 

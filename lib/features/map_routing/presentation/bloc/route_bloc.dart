@@ -12,6 +12,23 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
   RouteBloc(this._repository) : super(const RouteState()) {
     on<BuildRouteRequested>(_onBuildRequested);
     on<ClearRouteRequested>(_onClearRequested);
+    on<RestoreSavedRoute>(_onRestoreRequested);
+  }
+
+  void _onRestoreRequested(
+    RestoreSavedRoute event,
+    Emitter<RouteState> emit,
+  ) {
+    final route = event.route;
+    emit(state.copyWith(
+      status: RouteStatus.success,
+      destination: LatLng(route.endLat, route.endLng),
+      route: RouteInfo(
+        points: route.points,
+        distance: route.distance,
+        duration: route.duration,
+      ),
+    ));
   }
 
   Future<void> _onBuildRequested(

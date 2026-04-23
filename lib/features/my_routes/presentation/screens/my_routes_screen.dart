@@ -52,7 +52,8 @@ class MyRoutesScreen extends StatelessWidget {
                 return RouteCard(
                   route: route,
                   onTap: () {
-                    // Logic to display route on map will be added in Stage 7
+                    context.read<RouteBloc>().add(RestoreSavedRoute(route));
+                    context.go('/home');
                   },
                   onFavoriteToggle: () {
                     context.read<SavedRoutesBloc>().add(ToggleFavoriteRoute(route));
