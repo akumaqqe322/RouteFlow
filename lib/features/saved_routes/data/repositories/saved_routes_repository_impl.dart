@@ -21,7 +21,7 @@ class SavedRoutesRepositoryImpl implements SavedRoutesRepository {
     final box = await Hive.openBox(_boxName);
     final localData = box.get(id);
     if (localData != null) {
-      return SavedRouteModel.fromJson(Map<String, dynamic>.from(localData)).toEntity();
+      return SavedRouteModel.fromJson(Map<String, dynamic>.from(localData));
     }
 
     // 2. Fallback to Cloud
@@ -30,22 +30,25 @@ class SavedRoutesRepositoryImpl implements SavedRoutesRepository {
 
     try {
       final response = await _supabase
-          .from('saved_routes')
+          .from('routes')
           .select()
           .eq('id', id)
           .eq('user_id', userId)
           .maybeSingle();
 
       if (response != null) {
-        final model = SavedRouteModel.fromJson(response);
+        final route = SavedRouteModel.fromJson(response);
         await box.put(id, response); // Cache for next time
-        return model.toEntity();
+        return route;
       }
     } catch (_) {
       return null;
     }
     return null;
   }
+
+  @override
+  Future<List<SavedRoute>> getRoutes({bool forceRefresh = false}) async {
     try {
       final box = await _box;
       

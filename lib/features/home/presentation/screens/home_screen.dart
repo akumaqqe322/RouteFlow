@@ -10,6 +10,7 @@ import 'package:route_flow/features/map_routing/presentation/bloc/route_event.da
 import 'package:route_flow/features/map_routing/presentation/bloc/route_state.dart';
 import 'package:route_flow/features/map_routing/domain/entities/route_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:route_flow/features/saved_routes/presentation/widgets/save_route_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -258,8 +259,6 @@ class _RouteStatusCard extends StatelessWidget {
     return const SizedBox.shrink();
   }
 }
-
-import 'package:route_flow/features/saved_routes/presentation/widgets/save_route_dialog.dart';
 
 class _RouteDetailsPanel extends StatelessWidget {
   final RouteInfo route;

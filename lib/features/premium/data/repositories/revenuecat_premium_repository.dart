@@ -13,6 +13,10 @@ class RevenueCatPremiumRepository implements PremiumRepository {
 
   @override
   Future<void> initialize(String userId) async {
+    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+      return; // Not supported on desktop via purchases_flutter yet
+    }
+
     final apiKey = Platform.isIOS 
         ? AppConfig.revenueCatApiKeyIos 
         : AppConfig.revenueCatApiKeyAndroid;
