@@ -139,11 +139,11 @@ class AppShell extends StatelessWidget {
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.map_outlined),
-            label: l10n.tabDiscover,
+            label: l10n.navHome,
           ),
           NavigationDestination(
             icon: const Icon(Icons.route_outlined),
-            label: l10n.tabRoutes,
+            label: l10n.myRoutesTitle,
           ),
           NavigationDestination(
             icon: const Icon(Icons.star_outline),
@@ -151,7 +151,7 @@ class AppShell extends StatelessWidget {
           ),
           NavigationDestination(
             icon: const Icon(Icons.person_outline),
-            label: l10n.tabProfile,
+            label: l10n.navProfile,
           ),
         ],
       ),

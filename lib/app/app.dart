@@ -10,6 +10,8 @@ import 'package:route_flow/features/onboarding/presentation/cubit/onboarding_cub
 import 'package:route_flow/features/map_routing/presentation/bloc/location_bloc.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/location_event.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/route_bloc.dart';
+import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_bloc.dart';
+import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_event.dart';
 
 class RouteFlowApp extends StatelessWidget {
   const RouteFlowApp({super.key});
@@ -22,6 +24,7 @@ class RouteFlowApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<OnboardingCubit>()),
         BlocProvider(create: (context) => getIt<LocationBloc>()),
         BlocProvider(create: (context) => getIt<RouteBloc>()),
+        BlocProvider(create: (context) => getIt<SavedRoutesBloc>()..add(const LoadSavedRoutes())),
       ],
       child: MaterialApp.router(
         title: 'RouteFlow',

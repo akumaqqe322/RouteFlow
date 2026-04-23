@@ -52,5 +52,18 @@
   "routeErrorNoRoute": "No route found between these locations.",
   "routeErrorNetwork": "Network error. Please check your connection.",
   "routeErrorUnexpected": "An unexpected error occurred while building the route.",
-  "routeSelectDestinationHint": "Tap on the map to set destination"
+  "routeSelectDestinationHint": "Tap on the map to set destination",
+  "routeStartLabel": "Start",
+  "routeDestinationLabel": "Destination",
+  "routeSaveBtn": "Save Route",
+  "routeSaveSuccess": "Route saved successfully",
+  "routeSaveDialogTitle": "Save Route",
+  "routeSaveDialogHint": "Route Name (e.g., Morning Run)",
+  "routeSaveDialogAction": "Save",
+  "myRoutesEmpty": "No saved routes yet. Start exploring!",
+  "myRoutesTitle": "My Routes",
+  "myRoutesDeleteConfirm": "Are you sure you want to delete this route?",
+  "myRoutesRename": "Rename",
+  "myRoutesDelete": "Delete",
+  "myRoutesRenameDialogTitle": "Rename Route"
 }

@@ -52,5 +52,18 @@
   "routeErrorNoRoute": "Маршрут между этими точками не найден.",
   "routeErrorNetwork": "Ошибка сети. Проверьте подключение.",
   "routeErrorUnexpected": "Произошла ошибка при построении маршрута.",
-  "routeSelectDestinationHint": "Нажмите на карту, чтобы выбрать цель"
+  "routeSelectDestinationHint": "Нажмите на карту, чтобы выбрать цель",
+  "routeStartLabel": "Старт",
+  "routeDestinationLabel": "Цель",
+  "routeSaveBtn": "Сохранить",
+  "routeSaveSuccess": "Маршрут сохранен",
+  "routeSaveDialogTitle": "Сохранить маршрут",
+  "routeSaveDialogHint": "Название (например, Утренняя пробежка)",
+  "routeSaveDialogAction": "Сохранить",
+  "myRoutesEmpty": "У вас пока нет сохраненных маршрутов. Начните исследовать!",
+  "myRoutesTitle": "Мои маршруты",
+  "myRoutesDeleteConfirm": "Вы уверены, что хотите удалить этот маршрут?",
+  "myRoutesRename": "Переименовать",
+  "myRoutesDelete": "Удалить",
+  "myRoutesRenameDialogTitle": "Переименовать маршрут"
 }

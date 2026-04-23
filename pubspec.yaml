@@ -25,6 +25,7 @@ dependencies:
 
   # Supabase
   supabase_flutter: ^2.6.0
+  uuid: ^4.5.1
 
   # Map & Location
   flutter_map: ^7.0.2
@@ -36,6 +37,8 @@ dependencies:
 
   # Storage & Config
   shared_preferences: ^2.3.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:

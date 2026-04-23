@@ -229,6 +229,8 @@ class _RouteStatusCard extends StatelessWidget {
   }
 }
 
+import 'package:route_flow/features/saved_routes/presentation/widgets/save_route_dialog.dart';
+
 class _RouteDetailsPanel extends StatelessWidget {
   final RouteInfo route;
   final LatLng start;
@@ -272,7 +274,7 @@ class _RouteDetailsPanel extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _PointInfo(
-                      label: "Start",
+                      label: l10n.routeStartLabel,
                       coords: start,
                       icon: Icons.my_location,
                       iconColor: Colors.blue,
@@ -281,7 +283,7 @@ class _RouteDetailsPanel extends StatelessWidget {
                   const Icon(Icons.arrow_forward, color: Colors.grey, size: 16),
                   Expanded(
                     child: _PointInfo(
-                      label: "Destination",
+                      label: l10n.routeDestinationLabel,
                       coords: destination,
                       icon: Icons.location_on,
                       iconColor: Colors.red,
@@ -306,14 +308,39 @@ class _RouteDetailsPanel extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => context.read<RouteBloc>().add(ClearRouteRequested()),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
-                  backgroundColor: Colors.red.shade50,
-                  foregroundColor: Colors.red,
-                ),
-                child: Text(l10n.routeClearBtn),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => context.read<RouteBloc>().add(ClearRouteRequested()),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(0, 56),
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                      ),
+                      child: Text(l10n.routeClearBtn),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => SaveRouteDialog(
+                            routeInfo: route,
+                            start: start,
+                            destination: destination,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(0, 56),
+                      ),
+                      child: Text(l10n.routeSaveBtn),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
