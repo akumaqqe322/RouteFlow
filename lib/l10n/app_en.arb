@@ -44,5 +44,10 @@
   "mapServicesDisabledDesc": "Location services are disabled on your device. Please turn them on in system settings.",
   "mapServicesDisabledBtn": "Open System Settings",
   "mapLocationRetry": "Retry",
-  "mapMyLocation": "My Location"
+  "mapMyLocation": "My Location",
+  "routeDistanceLabel": "Distance",
+  "routeDurationLabel": "Travel Time",
+  "routeClearBtn": "Clear Route",
+  "routeBuildingError": "Failed to build route",
+  "routeSelectDestinationHint": "Tap on the map to set destination"
 }

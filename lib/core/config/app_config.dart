@@ -14,7 +14,7 @@ class AppConfig {
 
   static const String osrmBaseUrl = String.fromEnvironment(
     'OSRM_BASE_URL',
-    defaultValue: 'https://router.project-osrm.org',
+    defaultValue: 'https://router.project-osrm.org/route/v1/driving',
   );
 
   static const bool isDev = bool.fromEnvironment(

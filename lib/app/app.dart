@@ -9,6 +9,7 @@ import 'package:route_flow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:route_flow/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/location_bloc.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/location_event.dart';
+import 'package:route_flow/features/map_routing/presentation/bloc/route_bloc.dart';
 
 class RouteFlowApp extends StatelessWidget {
   const RouteFlowApp({super.key});
@@ -20,6 +21,7 @@ class RouteFlowApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<OnboardingCubit>()),
         BlocProvider(create: (context) => getIt<LocationBloc>()),
+        BlocProvider(create: (context) => getIt<RouteBloc>()),
       ],
       child: MaterialApp.router(
         title: 'RouteFlow',

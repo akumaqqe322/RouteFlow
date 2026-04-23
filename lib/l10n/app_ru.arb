@@ -44,5 +44,10 @@
   "mapServicesDisabledDesc": "Службы геолокации отключены на вашем устройстве. Пожалуйста, включите их в настройках системы.",
   "mapServicesDisabledBtn": "Открыть системные настройки",
   "mapLocationRetry": "Повторить",
-  "mapMyLocation": "Мое местоположение"
+  "mapMyLocation": "Мое местоположение",
+  "routeDistanceLabel": "Расстояние",
+  "routeDurationLabel": "Время в пути",
+  "routeClearBtn": "Очистить маршрут",
+  "routeBuildingError": "Не удалось построить маршрут",
+  "routeSelectDestinationHint": "Нажмите на карту, чтобы выбрать цель"
 }
