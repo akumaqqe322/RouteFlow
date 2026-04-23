@@ -7,6 +7,9 @@ final getIt = GetIt.instance;
 
 @module
 abstract class RegisterModule {
+  @preResolve
+  Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
+
   @lazySingleton
   SupabaseClient get supabaseClient => Supabase.instance.client;
 }

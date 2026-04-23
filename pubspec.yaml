@@ -29,6 +29,9 @@ dependencies:
   # Models & Core
   equatable: ^2.0.5
 
+  # Storage & Config
+  shared_preferences: ^2.3.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
