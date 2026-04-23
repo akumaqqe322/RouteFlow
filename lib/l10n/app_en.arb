@@ -83,6 +83,7 @@
   "premiumErrorOfferings": "Failed to load offerings.",
   "premiumErrorSetupUnavailable": "Subscription service is currently unavailable. This may require external store configuration.",
   "premiumFreePlan": "Free Plan",
+  "errorRouteNotFound": "The requested route could not be found or has been deleted.",
   "errorAuthRequired": "You must be signed in to access saved routes.",
   "errorStorageFailed": "Failed to access local storage.",
   "errorSaveFailed": "Failed to save route to cloud.",

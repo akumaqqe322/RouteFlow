@@ -71,6 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 
                 _mapController.move(center, 14.0);
               }
+
+              if (state.status == RouteStatus.failure && state.error == 'route_not_found') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(AppLocalizations.of(context)!.errorRouteNotFound)),
+                );
+              }
             },
           ),
         ],

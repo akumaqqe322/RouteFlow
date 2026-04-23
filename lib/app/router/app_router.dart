@@ -12,6 +12,9 @@ import 'package:route_flow/features/my_routes/presentation/screens/my_routes_scr
 import 'package:route_flow/features/premium/presentation/screens/premium_screen.dart';
 import 'package:route_flow/features/profile/presentation/screens/profile_screen.dart';
 import 'package:route_flow/app/di/di.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:route_flow/features/map_routing/presentation/bloc/route_bloc.dart';
+import 'package:route_flow/features/map_routing/presentation/bloc/route_event.dart';
 import 'package:route_flow/app/router/router_refresh_listenable.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -27,9 +30,11 @@ class AppRouter {
       final authState = getIt<AuthBloc>().state;
       final onboardingState = getIt<OnboardingCubit>().state;
       
-      final bool isAuthPath = state.uri.toString().startsWith('/auth');
-      final bool isSplashPath = state.uri.toString().startsWith('/splash');
-      final bool isOnboardingPath = state.uri.toString().startsWith('/onboarding');
+      final String uri = state.uri.toString();
+      final bool isAuthPath = uri.startsWith('/auth');
+      final bool isSplashPath = uri.startsWith('/splash');
+      final bool isOnboardingPath = uri.startsWith('/onboarding');
+      final bool isRoutePath = uri.startsWith('/route/');
 
       // 1. Initial State: Let splash handle initialization
       if (authState is AuthInitial || onboardingState is OnboardingInitial) {
@@ -45,11 +50,17 @@ class AppRouter {
 
       // 3. Auth Check
       if (authState is Unauthenticated) {
+        if (isRoutePath) return '/auth?redirect=$uri';
         if (!isAuthPath) return '/auth';
         return null;
       }
 
-      // 4. Authenticated & Onboarding Complete -> Handle edge case redirects
+      // 4. Authenticated & Onboarding Complete 
+      final String? redirect = state.uri.queryParameters['redirect'];
+      if (redirect != null && redirect.startsWith('/route/')) {
+        return redirect;
+      }
+
       if (isAuthPath || isOnboardingPath || isSplashPath) {
         return '/home';
       }
@@ -71,6 +82,15 @@ class AppRouter {
         path: '/auth',
         name: 'auth',
         builder: (context, state) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: '/route/:id',
+        name: 'open_route',
+        builder: (context, state) {
+          final String id = state.pathParameters['id']!;
+          context.read<RouteBloc>().add(LoadSavedRouteById(id));
+          return const HomeScreen();
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

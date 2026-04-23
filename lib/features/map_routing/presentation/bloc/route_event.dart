@@ -25,3 +25,10 @@ class RestoreSavedRoute extends RouteEvent {
   @override
   List<Object?> get props => [route];
 }
+
+class LoadSavedRouteById extends RouteEvent {
+  final String routeId;
+  const LoadSavedRouteById(this.routeId);
+  @override
+  List<Object?> get props => [routeId];
+}

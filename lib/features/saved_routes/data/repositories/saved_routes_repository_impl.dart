@@ -16,7 +16,36 @@ class SavedRoutesRepositoryImpl implements SavedRoutesRepository {
   Future<Box> get _box async => Hive.openBox(_boxName);
 
   @override
-  Future<List<SavedRoute>> getRoutes({bool forceRefresh = false}) async {
+  Future<SavedRoute?> getRouteById(String id) async {
+    // 1. Check Local Cache First
+    final box = await Hive.openBox(_boxName);
+    final localData = box.get(id);
+    if (localData != null) {
+      return SavedRouteModel.fromJson(Map<String, dynamic>.from(localData)).toEntity();
+    }
+
+    // 2. Fallback to Cloud
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) throw SavedRoutesAuthFailure();
+
+    try {
+      final response = await _supabase
+          .from('saved_routes')
+          .select()
+          .eq('id', id)
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (response != null) {
+        final model = SavedRouteModel.fromJson(response);
+        await box.put(id, response); // Cache for next time
+        return model.toEntity();
+      }
+    } catch (_) {
+      return null;
+    }
+    return null;
+  }
     try {
       final box = await _box;
       
