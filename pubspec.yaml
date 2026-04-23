@@ -52,6 +52,11 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   build_runner: ^2.4.11
   injectable_generator: ^2.6.2
+  
+  # Testing
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.4
+  golden_toolkit: ^0.15.0
 
 flutter:
   uses-material-design: true
