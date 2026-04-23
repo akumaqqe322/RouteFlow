@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
 @singleton
@@ -36,6 +37,28 @@ class AppConfig {
     'IS_DEV',
     defaultValue: true,
   );
+
+  static const bool isDemoMode = bool.fromEnvironment(
+    'IS_DEMO_MODE',
+    defaultValue: false,
+  );
+
+  static const bool enableDemoAuth = bool.fromEnvironment(
+    'ENABLE_DEMO_AUTH',
+    defaultValue: false,
+  );
+
+  static bool get enablePremiumPurchases {
+    // Disable purchases on Web or if keys are missing
+    if (kIsWeb) return false;
+    return revenueCatApiKeyIos.isNotEmpty || revenueCatApiKeyAndroid.isNotEmpty;
+  }
+
+  static bool get enableCrashReporting {
+    // Disable crash reporting on Web or if DSN is missing
+    if (kIsWeb) return false;
+    return sentryDsn.isNotEmpty;
+  }
 
   const AppConfig();
 

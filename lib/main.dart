@@ -6,12 +6,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:route_flow/app/app.dart';
 import 'package:route_flow/app/di/di.dart';
+import 'package:route_flow/core/config/platform_config.dart';
 import 'package:route_flow/core/config/app_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  if (AppConfig.sentryDsn.isNotEmpty) {
+  // Clean up browser URLs on web, no-op on native
+  configurePlatform();
+  
+  if (AppConfig.enableCrashReporting) {
     await SentryFlutter.init(
       (options) {
         options.dsn = AppConfig.sentryDsn;
@@ -21,7 +25,7 @@ void main() async {
       appRunner: () => _initializeAppAndRun(),
     );
   } else {
-    debugPrint('[Main] Sentry DSN missing. Monitoring is disabled.');
+    debugPrint('[Main] Crash reporting is disabled or unavailable for this platform.');
     await _initializeAppAndRun();
   }
 }
@@ -44,18 +48,22 @@ Future<void> _initializeAppAndRun() async {
     // Setup global error capture
     FlutterError.onError = (details) {
       FlutterError.presentError(details);
-      Sentry.captureException(details.exception, stackTrace: details.stack);
+      if (AppConfig.enableCrashReporting) {
+        Sentry.captureException(details.exception, stackTrace: details.stack);
+      }
     };
 
     PlatformDispatcher.instance.onError = (error, stack) {
-      Sentry.captureException(error, stackTrace: stack);
+      if (AppConfig.enableCrashReporting) {
+        Sentry.captureException(error, stackTrace: stack);
+      }
       return true;
     };
 
     runApp(const RouteFlowApp());
   } catch (e, stack) {
     debugPrint('[Critical Error during startup]: $e');
-    if (AppConfig.sentryDsn.isNotEmpty) {
+    if (AppConfig.enableCrashReporting) {
       await Sentry.captureException(e, stackTrace: stack);
     }
   }

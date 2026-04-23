@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -13,11 +13,13 @@ class RevenueCatPremiumRepository implements PremiumRepository {
 
   @override
   Future<void> initialize(String userId) async {
-    if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-      return; // Not supported on desktop via purchases_flutter yet
+    if (!AppConfig.enablePremiumPurchases) {
+      debugPrint('[PremiumRepository] Purchases disabled for this platform or configuration.');
+      return;
     }
 
-    final apiKey = Platform.isIOS 
+    final isIOS = defaultTargetPlatform == TargetPlatform.iOS;
+    final apiKey = isIOS 
         ? AppConfig.revenueCatApiKeyIos 
         : AppConfig.revenueCatApiKeyAndroid;
     
@@ -34,8 +36,7 @@ class RevenueCatPremiumRepository implements PremiumRepository {
   @override
   Future<PremiumStatus> getStatus() async {
     try {
-      if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-        // Mock to avoid crash on unsupported platforms during development
+      if (!AppConfig.enablePremiumPurchases) {
         return PremiumStatus.free();
       }
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
