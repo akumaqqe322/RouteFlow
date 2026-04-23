@@ -49,5 +49,8 @@
   "routeDurationLabel": "Время в пути",
   "routeClearBtn": "Очистить маршрут",
   "routeBuildingError": "Не удалось построить маршрут",
+  "routeErrorNoRoute": "Маршрут между этими точками не найден.",
+  "routeErrorNetwork": "Ошибка сети. Проверьте подключение.",
+  "routeErrorUnexpected": "Произошла ошибка при построении маршрута.",
   "routeSelectDestinationHint": "Нажмите на карту, чтобы выбрать цель"
 }

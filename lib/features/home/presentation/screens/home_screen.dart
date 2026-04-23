@@ -8,6 +8,7 @@ import 'package:route_flow/features/map_routing/presentation/bloc/location_state
 import 'package:route_flow/features/map_routing/presentation/bloc/route_bloc.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/route_event.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/route_state.dart';
+import 'package:route_flow/features/map_routing/domain/entities/route_info.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -119,26 +120,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   
-                  // Top Status Bar / Hint
-                  if (routeState.status == RouteStatus.initial)
+                  // Top Status Bar / Hint / Error
+                  if (routeState.status == RouteStatus.initial || routeState.status == RouteStatus.failure)
                     Positioned(
                       top: 60,
                       left: 20,
                       right: 20,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            l10n.routeSelectDestinationHint,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                      child: _RouteStatusCard(
+                        status: routeState.status,
+                        errorMessage: routeState.error,
                       ),
                     ),
 
                   // Route Details Panel
-                  if (routeState.route != null)
-                    _RouteDetailsPanel(route: routeState.route!),
+                  if (routeState.route != null && locationState.location != null)
+                    _RouteDetailsPanel(
+                      route: routeState.route!,
+                      start: LatLng(
+                        locationState.location!.latitude,
+                        locationState.location!.longitude,
+                      ),
+                      destination: routeState.destination!,
+                    ),
 
                   // My Location Button
                   Positioned(
@@ -163,10 +166,79 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _RouteDetailsPanel extends StatelessWidget {
-  final dynamic route;
+class _RouteStatusCard extends StatelessWidget {
+  final RouteStatus status;
+  final String? errorMessage;
 
-  const _RouteDetailsPanel({required this.route});
+  const _RouteStatusCard({
+    required this.status,
+    this.errorMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    if (status == RouteStatus.initial) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(l10n.routeSelectDestinationHint, textAlign: TextAlign.center),
+        ),
+      );
+    }
+
+    if (status == RouteStatus.failure) {
+      String message;
+      switch (errorMessage) {
+        case 'route_not_found':
+          message = l10n.routeErrorNoRoute;
+          break;
+        case 'route_network_error':
+          message = l10n.routeErrorNetwork;
+          break;
+        default:
+          message = l10n.routeErrorUnexpected;
+      }
+
+      return Card(
+        color: Colors.red.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.red),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, size: 18),
+                onPressed: () => context.read<RouteBloc>().add(ClearRouteRequested()),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}
+
+class _RouteDetailsPanel extends StatelessWidget {
+  final RouteInfo route;
+  final LatLng start;
+  final LatLng destination;
+
+  const _RouteDetailsPanel({
+    required this.route,
+    required this.start,
+    required this.destination,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +269,28 @@ class _RouteDetailsPanel extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
+                children: [
+                  Expanded(
+                    child: _PointInfo(
+                      label: "Start",
+                      coords: start,
+                      icon: Icons.my_location,
+                      iconColor: Colors.blue,
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward, color: Colors.grey, size: 16),
+                  Expanded(
+                    child: _PointInfo(
+                      label: "Destination",
+                      coords: destination,
+                      icon: Icons.location_on,
+                      iconColor: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 32),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _DetailItem(
@@ -225,6 +319,42 @@ class _RouteDetailsPanel extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PointInfo extends StatelessWidget {
+  final String label;
+  final LatLng coords;
+  final IconData icon;
+  final Color iconColor;
+
+  const _PointInfo({
+    required this.label,
+    required this.coords,
+    required this.icon,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 14, color: iconColor),
+            const SizedBox(width: 4),
+            Text(label, style: Theme.of(context).textTheme.bodySmall),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          "${coords.latitude.toStringAsFixed(5)}, ${coords.longitude.toStringAsFixed(5)}",
+          style: const TextStyle(fontSize: 10, fontFamily: 'monospace'),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 }

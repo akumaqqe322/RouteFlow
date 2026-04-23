@@ -49,5 +49,8 @@
   "routeDurationLabel": "Travel Time",
   "routeClearBtn": "Clear Route",
   "routeBuildingError": "Failed to build route",
+  "routeErrorNoRoute": "No route found between these locations.",
+  "routeErrorNetwork": "Network error. Please check your connection.",
+  "routeErrorUnexpected": "An unexpected error occurred while building the route.",
   "routeSelectDestinationHint": "Tap on the map to set destination"
 }

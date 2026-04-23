@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:route_flow/features/map_routing/domain/repositories/routing_repository.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/route_event.dart';
 import 'package:route_flow/features/map_routing/presentation/bloc/route_state.dart';
+import 'package:route_flow/core/error/route_failure.dart';
 
 @injectable
 class RouteBloc extends Bloc<RouteEvent, RouteState> {
@@ -17,9 +18,13 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     BuildRouteRequested event,
     Emitter<RouteState> emit,
   ) async {
+    // 1. Prevent overlapping requests
+    if (state.status == RouteStatus.loading) return;
+
     emit(state.copyWith(
       status: RouteStatus.loading,
       destination: event.destination,
+      error: null,
     ));
 
     try {
@@ -31,10 +36,15 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         status: RouteStatus.success,
         route: route,
       ));
+    } on RouteFailure catch (e) {
+      emit(state.copyWith(
+        status: RouteStatus.failure,
+        error: e.message,
+      ));
     } catch (e) {
       emit(state.copyWith(
         status: RouteStatus.failure,
-        error: e.toString(),
+        error: 'unexpected_error',
       ));
     }
   }
