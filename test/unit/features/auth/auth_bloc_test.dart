@@ -1,18 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:route_flow/features/auth/domain/entities/user.dart';
+import 'package:route_flow/features/auth/domain/entities/auth_user.dart';
 import 'package:route_flow/features/auth/domain/repositories/auth_repository.dart';
 import 'package:route_flow/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:route_flow/features/auth/presentation/bloc/auth_event.dart';
 import 'package:route_flow/features/auth/presentation/bloc/auth_state.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
-class MockUser extends Mock implements User {}
+class MockUser extends Mock implements AuthUser {}
 
 void main() {
   late AuthRepository repository;
-  late User user;
+  late AuthUser user;
 
   setUp(() {
     repository = MockAuthRepository();

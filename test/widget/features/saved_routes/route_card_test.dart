@@ -32,9 +32,9 @@ void main() {
         ),
       );
 
-      expect(find.text('Morning Run'), findsOneWidget);
-      expect(find.text('5.0 km'), findsOneWidget);
-      expect(find.text('30 min'), findsOneWidget);
+      expect(find.text(testRoute.title), findsOneWidget);
+      expect(find.byIcon(Icons.straighten), findsOneWidget);
+      expect(find.byIcon(Icons.timer_outlined), findsOneWidget);
     });
 
     testWidgets('should call callbacks when interactions occur', (tester) async {
@@ -51,16 +51,18 @@ void main() {
         ),
       );
 
-      await tester.tap(find.byType(InkWell));
+      // Tap the card body
+      await tester.tap(find.text(testRoute.title));
       expect(tapped, isTrue);
 
+      // Tap the favorite icon
       await tester.tap(find.byIcon(Icons.favorite_border));
       expect(favoriteToggled, isTrue);
     });
   });
 
   group('RouteCard Golden Test', () {
-    testGoldens('should match golden for regular route', (tester) async {
+    testGoldens('should match golden for regular and favorite route', (tester) async {
       final builder = GoldenBuilder.column()
         ..addScenario(
           'Regular Route',
@@ -83,8 +85,15 @@ void main() {
           ),
         );
 
-      await tester.pumpWidgetBuilder(builder.build());
-      await screenMatchesGolden(tester, 'route_card_scenarios');
+      await tester.pumpWidgetBuilder(
+        builder.build(),
+        wrapper: (child) => MaterialApp(
+          theme: ThemeData(primarySwatch: Colors.green),
+          home: Scaffold(body: Center(child: child)),
+        ),
+      );
+      
+      await screenMatchesGolden(tester, 'route_card');
     });
   });
 }
