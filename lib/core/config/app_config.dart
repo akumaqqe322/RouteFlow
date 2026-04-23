@@ -23,4 +23,15 @@ class AppConfig {
   );
 
   const AppConfig();
+
+  static void validate() {
+    if (supabaseUrl.isEmpty || supabaseAnonKey.isEmpty) {
+      throw Exception(
+        '\n\n[AppConfig Error]: Missing Supabase Configuration.\n'
+        'Ensure you are building with:\n'
+        '--dart-define=SUPABASE_URL=YOUR_URL\n'
+        '--dart-define=SUPABASE_ANON_KEY=YOUR_KEY\n',
+      );
+    }
+  }
 }

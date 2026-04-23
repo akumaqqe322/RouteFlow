@@ -7,6 +7,9 @@ import 'package:route_flow/core/config/app_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Fail-fast configuration check
+  AppConfig.validate();
+
   await Supabase.initialize(
     url: AppConfig.supabaseUrl,
     anonKey: AppConfig.supabaseAnonKey,

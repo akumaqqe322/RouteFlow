@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:route_flow/features/auth/domain/repositories/auth_repository.dart';
 import 'package:route_flow/features/auth/presentation/cubit/sign_in_state.dart';
+import 'package:route_flow/core/error/auth_failure.dart';
 
 @injectable
 class SignInCubit extends Cubit<SignInState> {
@@ -31,10 +32,15 @@ class SignInCubit extends Cubit<SignInState> {
         );
       }
       emit(state.copyWith(status: SignInStatus.success));
+    } on AuthFailure catch (e) {
+      emit(state.copyWith(
+        status: SignInStatus.failure,
+        errorMessage: e.message,
+      ));
     } catch (e) {
       emit(state.copyWith(
         status: SignInStatus.failure,
-        errorMessage: e.toString(),
+        errorMessage: 'unexpected_error',
       ));
     }
   }

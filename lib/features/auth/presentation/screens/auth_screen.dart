@@ -17,13 +17,28 @@ class AuthScreen extends StatelessWidget {
       child: BlocConsumer<SignInCubit, SignInState>(
         listener: (context, state) {
           if (state.status == SignInStatus.failure) {
+            String message;
+            switch (state.errorMessage) {
+              case 'invalid_credentials':
+                message = l10n.errorInvalidCredentials;
+                break;
+              case 'email_already_in_use':
+                message = l10n.errorEmailAlreadyInUse;
+                break;
+              case 'network_failure':
+                message = l10n.errorNetwork;
+                break;
+              default:
+                message = l10n.errorUnexpected;
+            }
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage ?? l10n.authGenericError)),
+              SnackBar(content: Text(message)),
             );
           }
         },
         builder: (context, state) {
           final cubit = context.read<SignInCubit>();
+          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
           return Scaffold(
             appBar: AppBar(
@@ -39,7 +54,7 @@ class AuthScreen extends StatelessWidget {
                   TextField(
                     decoration: InputDecoration(
                       labelText: l10n.emailLabel,
-                      errorText: state.email.isNotEmpty && !state.email.contains('@') 
+                      errorText: state.email.isNotEmpty && !emailRegex.hasMatch(state.email) 
                           ? l10n.invalidEmailError 
                           : null,
                     ),

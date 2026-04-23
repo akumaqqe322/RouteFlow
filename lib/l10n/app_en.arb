@@ -18,5 +18,13 @@
   "invalidEmailError": "Please enter a valid email",
   "invalidPasswordError": "Password must be at least 6 characters",
   "authGenericError": "Authentication failed. Please try again.",
-  "logoutButton": "Logout"
+  "logoutButton": "Logout",
+  "tabDiscover": "Discover",
+  "tabRoutes": "Routes",
+  "tabPremium": "Premium",
+  "tabProfile": "Profile",
+  "errorInvalidCredentials": "Invalid email or password",
+  "errorEmailAlreadyInUse": "This email is already registered",
+  "errorNetwork": "Network error, please check your connection",
+  "errorUnexpected": "An unexpected error occurred"
 }

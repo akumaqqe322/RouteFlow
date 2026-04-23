@@ -10,19 +10,22 @@ import 'package:route_flow/features/my_routes/presentation/screens/my_routes_scr
 import 'package:route_flow/features/premium/presentation/screens/premium_screen.dart';
 import 'package:route_flow/features/profile/presentation/screens/profile_screen.dart';
 import 'package:route_flow/app/di/di.dart';
+import 'package:route_flow/app/router/router_refresh_listenable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppRouter {
   static final router = GoRouter(
     initialLocation: '/splash',
     debugLogDiagnostics: true,
+    refreshListenable: RouterRefreshListenable(getIt<AuthBloc>().stream),
     redirect: (context, state) {
       final authState = getIt<AuthBloc>().state;
       
       final bool isAuthPath = state.uri.toString().startsWith('/auth');
       final bool isSplashPath = state.uri.toString().startsWith('/splash');
 
-      // 1. Splash should always be allowed to finish or redirect
-      if (isSplashPath) return null;
+      // 1. Initial State: Let splash handle initialization
+      if (authState is AuthInitial && !isSplashPath) return '/splash';
 
       // 2. Not logged in -> Auth
       if (authState is Unauthenticated && !isAuthPath) {
@@ -109,16 +112,30 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) => navigationShell.goBranch(index),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.map_outlined), label: 'Discover'),
-          NavigationDestination(icon: Icon(Icons.route_outlined), label: 'Routes'),
-          NavigationDestination(icon: Icon(Icons.star_outline), label: 'Premium'),
-          NavigationDestination(icon: Icon(Icons.person_outline), label: 'Profile'),
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.map_outlined),
+            label: l10n.tabDiscover,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.route_outlined),
+            label: l10n.tabRoutes,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.star_outline),
+            label: l10n.tabPremium,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.person_outline),
+            label: l10n.tabProfile,
+          ),
         ],
       ),
     );

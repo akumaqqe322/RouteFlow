@@ -18,5 +18,13 @@
   "invalidEmailError": "Введите корректный email",
   "invalidPasswordError": "Пароль должен быть не менее 6 символов",
   "authGenericError": "Ошибка аутентификации. Попробуйте еще раз.",
-  "logoutButton": "Выйти"
+  "logoutButton": "Выйти",
+  "tabDiscover": "Карта",
+  "tabRoutes": "Маршруты",
+  "tabPremium": "Премиум",
+  "tabProfile": "Профиль",
+  "errorInvalidCredentials": "Неверный email или пароль",
+  "errorEmailAlreadyInUse": "Этот email уже зарегистрирован",
+  "errorNetwork": "Ошибка сети, проверьте подключение",
+  "errorUnexpected": "Произошла непредвиденная ошибка"
 }
