@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:route_flow/core/config/app_config.dart';
+import 'package:route_flow/core/error/premium_failure.dart';
 import 'package:route_flow/features/premium/domain/entities/premium_status.dart';
 import 'package:route_flow/features/premium/domain/repositories/premium_repository.dart';
 
@@ -11,8 +13,14 @@ class RevenueCatPremiumRepository implements PremiumRepository {
 
   @override
   Future<void> initialize(String userId) async {
-    // In a real app, API Keys would be per platform
-    final apiKey = Platform.isIOS ? 'goog_dummy_ios' : 'goog_dummy_android';
+    final apiKey = Platform.isIOS 
+        ? AppConfig.revenueCatApiKeyIos 
+        : AppConfig.revenueCatApiKeyAndroid;
+    
+    if (apiKey.isEmpty) {
+      // Logic for developers: don't crash, but log it or throw a specific failure during initialize
+      return;
+    }
     
     await Purchases.setLogLevel(LogLevel.debug);
     PurchasesConfiguration configuration = PurchasesConfiguration(apiKey);
@@ -23,6 +31,10 @@ class RevenueCatPremiumRepository implements PremiumRepository {
   @override
   Future<PremiumStatus> getStatus() async {
     try {
+      if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+        // Mock to avoid crash on unsupported platforms during development
+        return PremiumStatus.free();
+      }
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       return _mapCustomerInfo(customerInfo);
     } catch (_) {
@@ -32,7 +44,11 @@ class RevenueCatPremiumRepository implements PremiumRepository {
 
   @override
   Future<Offerings> getOfferings() async {
-    return await Purchases.getOfferings();
+    try {
+      return await Purchases.getOfferings();
+    } on PlatformException catch (e) {
+      throw const PremiumOfferingsLoadFailure();
+    }
   }
 
   @override
@@ -40,15 +56,22 @@ class RevenueCatPremiumRepository implements PremiumRepository {
     try {
       CustomerInfo customerInfo = await Purchases.purchasePackage(package);
       return customerInfo.entitlements.all[_entitlementId]?.isActive ?? false;
-    } catch (_) {
-      return false;
+    } on PlatformException catch (e) {
+      if (e.code == '1') { // RevenueCat code for Cancellation
+        throw const PremiumPurchaseCancelledFailure();
+      }
+      throw PremiumPurchaseFailedFailure(e.message);
     }
   }
 
   @override
   Future<PremiumStatus> restorePurchases() async {
-    CustomerInfo customerInfo = await Purchases.restorePurchases();
-    return _mapCustomerInfo(customerInfo);
+    try {
+      CustomerInfo customerInfo = await Purchases.restorePurchases();
+      return _mapCustomerInfo(customerInfo);
+    } catch (e) {
+      throw const PremiumPurchaseFailedFailure('restore_failed');
+    }
   }
 
   PremiumStatus _mapCustomerInfo(CustomerInfo info) {

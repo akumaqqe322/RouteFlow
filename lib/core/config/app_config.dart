@@ -17,6 +17,16 @@ class AppConfig {
     defaultValue: 'https://router.project-osrm.org/route/v1/driving',
   );
 
+  static const String revenueCatApiKeyIos = String.fromEnvironment(
+    'REVENUECAT_API_KEY_IOS',
+    defaultValue: '',
+  );
+
+  static const String revenueCatApiKeyAndroid = String.fromEnvironment(
+    'REVENUECAT_API_KEY_ANDROID',
+    defaultValue: '',
+  );
+
   static const bool isDev = bool.fromEnvironment(
     'IS_DEV',
     defaultValue: true,

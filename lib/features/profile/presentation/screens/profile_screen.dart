@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
-                          isPremium ? l10n.premiumActive : 'Free Plan',
+                          isPremium ? l10n.premiumActive : l10n.premiumFreePlan,
                           style: theme.textTheme.labelMedium?.copyWith(
                             color: isPremium ? Colors.green : Colors.grey,
                             fontWeight: FontWeight.bold,

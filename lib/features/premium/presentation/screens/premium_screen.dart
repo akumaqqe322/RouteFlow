@@ -34,9 +34,17 @@ class _PremiumScreenState extends State<PremiumScreen> {
       body: BlocConsumer<PremiumBloc, PremiumState>(
         listener: (context, state) {
           if (state.screenStatus == PremiumScreenStatus.failure && state.error != null) {
-            final msg = state.error == 'purchase_failed' 
-                ? l10n.premiumErrorPurchase 
-                : l10n.premiumErrorOfferings;
+            String msg;
+            switch (state.error) {
+              case 'purchase_cancelled':
+                msg = l10n.premiumErrorCancelled;
+                break;
+              case 'offerings_load_failed':
+                msg = l10n.premiumErrorOfferings;
+                break;
+              default:
+                msg = l10n.premiumErrorPurchase;
+            }
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
           }
         },

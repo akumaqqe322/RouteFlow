@@ -4,15 +4,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_bloc.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_event.dart';
 
+import 'package:latlong2/latlong.dart';
+import 'package:route_flow/features/map_routing/domain/entities/route_info.dart';
+import 'package:route_flow/features/premium/domain/logic/premium_policy.dart';
 import 'package:route_flow/features/premium/presentation/bloc/premium_bloc.dart';
-import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_state.dart';
 
 class SaveRouteDialog extends StatefulWidget {
-  static const int freeLimit = 3;
-
-  final dynamic routeInfo;
-  final dynamic start;
-  final dynamic destination;
+  final RouteInfo routeInfo;
+  final LatLng start;
+  final LatLng destination;
 
   const SaveRouteDialog({
     super.key,
@@ -39,9 +39,13 @@ class _SaveRouteDialogState extends State<SaveRouteDialog> {
     final l10n = AppLocalizations.of(context)!;
     final isPremium = context.watch<PremiumBloc>().state.status.isPremium;
     final routesCount = context.watch<SavedRoutesBloc>().state.routes.length;
-    final isLimitReached = !isPremium && routesCount >= SaveRouteDialog.freeLimit;
+    
+    final canSave = PremiumPolicy.canSaveMoreRoutes(
+      isPremium: isPremium,
+      currentRoutesCount: routesCount,
+    );
 
-    if (isLimitReached) {
+    if (!canSave) {
       return AlertDialog(
         title: Row(
           children: [
