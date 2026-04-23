@@ -1,0 +1,22 @@
+{
+  "@@locale": "en",
+  "appTitle": "RouteFlow",
+  "splashTitle": "RouteFlow",
+  "onboardingTitle": "Discovery and Create",
+  "homeTitle": "Discover",
+  "myRoutesTitle": "My Routes",
+  "premiumTitle": "Premium",
+  "profileTitle": "Profile",
+  "loginTitle": "Login",
+  "registerTitle": "Register",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "signInButton": "Sign In",
+  "signUpButton": "Sign Up",
+  "noAccountText": "Don't have an account?",
+  "haveAccountText": "Already have an account?",
+  "invalidEmailError": "Please enter a valid email",
+  "invalidPasswordError": "Password must be at least 6 characters",
+  "authGenericError": "Authentication failed. Please try again.",
+  "logoutButton": "Logout"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "RouteFlow",
+  "description": "A portfolio-grade Flutter mobile app for route building and discovery.",
+  "requestFramePermissions": [
+    "location",
+    "camera"
+  ],
+  "majorCapabilities": []
+}

@@ -1,0 +1,22 @@
+{
+  "@@locale": "ru",
+  "appTitle": "RouteFlow",
+  "splashTitle": "RouteFlow",
+  "onboardingTitle": "Находите и создавайте",
+  "homeTitle": "Главная",
+  "myRoutesTitle": "Мои маршруты",
+  "premiumTitle": "Премиум",
+  "profileTitle": "Профиль",
+  "loginTitle": "Вход",
+  "registerTitle": "Регистрация",
+  "emailLabel": "Эл. почта",
+  "passwordLabel": "Пароль",
+  "signInButton": "Войти",
+  "signUpButton": "Зарегистрироваться",
+  "noAccountText": "Нет аккаунта?",
+  "haveAccountText": "Уже есть аккаунт?",
+  "invalidEmailError": "Введите корректный email",
+  "invalidPasswordError": "Пароль должен быть не менее 6 символов",
+  "authGenericError": "Ошибка аутентификации. Попробуйте еще раз.",
+  "logoutButton": "Выйти"
+}

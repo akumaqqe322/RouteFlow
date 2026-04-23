@@ -1,0 +1,8 @@
+{
+  "__comment": "THIS IS NOT PART OF THE FLUTTER PROJECT. It exists only for the AI Studio preview environment.",
+  "name": "route-flow-meta",
+  "private": true,
+  "scripts": {
+    "dev": "tail -f /dev/null"
+  }
+}
