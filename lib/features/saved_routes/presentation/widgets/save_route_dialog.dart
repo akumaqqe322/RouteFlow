@@ -4,7 +4,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_bloc.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_event.dart';
 
+import 'package:route_flow/features/premium/presentation/bloc/premium_bloc.dart';
+import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_state.dart';
+
 class SaveRouteDialog extends StatefulWidget {
+  static const int freeLimit = 3;
+
   final dynamic routeInfo;
   final dynamic start;
   final dynamic destination;
@@ -32,6 +37,35 @@ class _SaveRouteDialogState extends State<SaveRouteDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isPremium = context.watch<PremiumBloc>().state.status.isPremium;
+    final routesCount = context.watch<SavedRoutesBloc>().state.routes.length;
+    final isLimitReached = !isPremium && routesCount >= SaveRouteDialog.freeLimit;
+
+    if (isLimitReached) {
+      return AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.lock_outline, color: Colors.orange),
+            const SizedBox(width: 12),
+            Expanded(child: Text(l10n.premiumLimitReached)),
+          ],
+        ),
+        content: Text(l10n.premiumLimitDesc),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.go('/premium');
+            },
+            child: Text(l10n.premiumUpgradeNow),
+          ),
+        ],
+      );
+    }
 
     return AlertDialog(
       title: Text(l10n.routeSaveDialogTitle),

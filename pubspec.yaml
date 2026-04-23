@@ -32,6 +32,9 @@ dependencies:
   latlong2: ^0.9.1
   geolocator: ^13.0.1
 
+  # Subscriptions
+  purchases_flutter: ^7.0.0
+
   # Models & Core
   equatable: ^2.0.5
 
