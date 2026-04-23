@@ -81,6 +81,7 @@
   "premiumErrorPurchase": "Ошибка при покупке. Попробуйте снова.",
   "premiumErrorCancelled": "Покупка была отменена.",
   "premiumErrorOfferings": "Не удалось загрузить предложения.",
+  "premiumErrorSetupUnavailable": "Сервис подписок временно недоступен. Требуется внешняя настройка магазина.",
   "premiumFreePlan": "Бесплатный план",
   "errorAuthRequired": "Войдите в систему, чтобы получить доступ к маршрутам.",
   "errorStorageFailed": "Ошибка при доступе к локальному хранилищу.",

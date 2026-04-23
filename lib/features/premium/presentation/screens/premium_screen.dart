@@ -49,6 +49,26 @@ class _PremiumScreenState extends State<PremiumScreen> {
           }
         },
         builder: (context, state) {
+          if (state.error == 'premium_config_missing') {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.settings_applications, size: 64, color: Colors.grey),
+                    const SizedBox(height: 24),
+                    Text(
+                      l10n.premiumErrorSetupUnavailable,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
           if (state.screenStatus == PremiumScreenStatus.loading && state.offerings == null) {
             return const Center(child: CircularProgressIndicator());
           }

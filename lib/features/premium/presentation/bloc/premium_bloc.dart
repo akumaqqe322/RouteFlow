@@ -21,9 +21,15 @@ class PremiumBloc extends Bloc<PremiumEvent, PremiumState> {
     InitializePremium event,
     Emitter<PremiumState> emit,
   ) async {
-    await _repository.initialize(event.userId);
-    final status = await _repository.getStatus();
-    emit(state.copyWith(status: status));
+    try {
+      await _repository.initialize(event.userId);
+      final status = await _repository.getStatus();
+      emit(state.copyWith(status: status, error: null));
+    } on PremiumFailure catch (e) {
+      emit(state.copyWith(error: e.message));
+    } catch (_) {
+      // Ignore general init errors to not block the app, but log them in prod
+    }
   }
 
   Future<void> _onLoadOfferings(

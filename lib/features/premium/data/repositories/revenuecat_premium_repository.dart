@@ -18,8 +18,7 @@ class RevenueCatPremiumRepository implements PremiumRepository {
         : AppConfig.revenueCatApiKeyAndroid;
     
     if (apiKey.isEmpty) {
-      // Logic for developers: don't crash, but log it or throw a specific failure during initialize
-      return;
+      throw const PremiumConfigurationFailure();
     }
     
     await Purchases.setLogLevel(LogLevel.debug);
