@@ -18,6 +18,8 @@ import 'package:route_flow/features/map_routing/presentation/bloc/route_event.da
 import 'package:route_flow/app/router/router_refresh_listenable.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:route_flow/features/map_routing/presentation/screens/deep_link_launcher_screen.dart';
+
 class AppRouter {
   static final router = GoRouter(
     initialLocation: '/splash',
@@ -31,34 +33,41 @@ class AppRouter {
       final onboardingState = getIt<OnboardingCubit>().state;
       
       final String uri = state.uri.toString();
+      final bool isRoutePath = uri.contains('/route/');
+      final String? pendingRedirect = state.uri.queryParameters['redirect'];
+      
+      // Identify the target redirect to carry forward (encoded to survive query params)
+      final String? targetRedirect = pendingRedirect ?? (isRoutePath ? uri : null);
+      final String redirectQuery = targetRedirect != null 
+          ? '?redirect=${Uri.encodeComponent(targetRedirect)}' 
+          : '';
+
       final bool isAuthPath = uri.startsWith('/auth');
       final bool isSplashPath = uri.startsWith('/splash');
       final bool isOnboardingPath = uri.startsWith('/onboarding');
-      final bool isRoutePath = uri.startsWith('/route/');
 
-      // 1. Initial State: Let splash handle initialization
+      // 1. Splash
       if (authState is AuthInitial || onboardingState is OnboardingInitial) {
-        if (!isSplashPath) return '/splash';
+        if (!isSplashPath) return '/splash$redirectQuery';
         return null;
       }
 
-      // 2. Onboarding Check (Highest Priority)
+      // 2. Onboarding
       if (onboardingState is OnboardingIncomplete) {
-        if (!isOnboardingPath) return '/onboarding';
+        if (!isOnboardingPath) return '/onboarding$redirectQuery';
         return null;
       }
 
-      // 3. Auth Check
+      // 3. Auth
       if (authState is Unauthenticated) {
-        if (isRoutePath) return '/auth?redirect=$uri';
-        if (!isAuthPath) return '/auth';
+        if (!isAuthPath) return '/auth$redirectQuery';
         return null;
       }
 
-      // 4. Authenticated & Onboarding Complete 
-      final String? redirect = state.uri.queryParameters['redirect'];
-      if (redirect != null && redirect.startsWith('/route/')) {
-        return redirect;
+      // 4. Landing
+      // If we are finished with flows but stuck on a splash/auth/onboarding path with a pending redirect
+      if (targetRedirect != null && !uri.startsWith('/route/')) {
+        return targetRedirect;
       }
 
       if (isAuthPath || isOnboardingPath || isSplashPath) {
@@ -88,8 +97,7 @@ class AppRouter {
         name: 'open_route',
         builder: (context, state) {
           final String id = state.pathParameters['id']!;
-          context.read<RouteBloc>().add(LoadSavedRouteById(id));
-          return const HomeScreen();
+          return DeepLinkLauncherScreen(routeId: id);
         },
       ),
       StatefulShellRoute.indexedStack(
