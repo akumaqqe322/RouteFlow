@@ -34,5 +34,12 @@
   "errorInvalidCredentials": "Invalid email or password",
   "errorEmailAlreadyInUse": "This email is already registered",
   "errorNetwork": "Network error, please check your connection",
-  "errorUnexpected": "An unexpected error occurred"
+  "errorUnexpected": "An unexpected error occurred",
+  "mapPermissionTitle": "Location Access Required",
+  "mapPermissionDesc": "Please enable location services to see your position on the map and build routes.",
+  "mapPermissionBtn": "Enable Location",
+  "mapPermissionDenied": "Location permission denied. Feature limited.",
+  "mapPermissionPermanentlyDenied": "Location permission is permanently denied. Please enable it in system settings.",
+  "mapLocationRetry": "Retry",
+  "mapMyLocation": "My Location"
 }

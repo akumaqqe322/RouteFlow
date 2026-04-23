@@ -34,5 +34,12 @@
   "errorInvalidCredentials": "Неверный email или пароль",
   "errorEmailAlreadyInUse": "Этот email уже зарегистрирован",
   "errorNetwork": "Ошибка сети, проверьте подключение",
-  "errorUnexpected": "Произошла непредвиденная ошибка"
+  "errorUnexpected": "Произошла непредвиденная ошибка",
+  "mapPermissionTitle": "Требуется доступ к локации",
+  "mapPermissionDesc": "Пожалуйста, включите геолокацию, чтобы видеть свое местоположение на карте и строить маршруты.",
+  "mapPermissionBtn": "Включить локацию",
+  "mapPermissionDenied": "В доступе к локации отказано. Функционал ограничен.",
+  "mapPermissionPermanentlyDenied": "Доступ к локации заблокирован навсегда. Пожалуйста, включите его в настройках системы.",
+  "mapLocationRetry": "Повторить",
+  "mapMyLocation": "Мое местоположение"
 }

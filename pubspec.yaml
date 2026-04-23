@@ -26,6 +26,11 @@ dependencies:
   # Supabase
   supabase_flutter: ^2.6.0
 
+  # Map & Location
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  geolocator: ^13.0.1
+
   # Models & Core
   equatable: ^2.0.5
 
