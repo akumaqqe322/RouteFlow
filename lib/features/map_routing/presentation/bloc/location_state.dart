@@ -1,7 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:route_flow/features/map_routing/domain/entities/location_data.dart';
 
-enum LocationStatus { initial, loading, success, failure, permissionDenied, permissionPermanentlyDenied }
+enum LocationStatus {
+  initial,
+  loading,
+  success,
+  failure,
+  permissionDenied,
+  permissionPermanentlyDenied,
+  servicesDisabled,
+}
 
 class LocationState extends Equatable {
   final LocationStatus status;

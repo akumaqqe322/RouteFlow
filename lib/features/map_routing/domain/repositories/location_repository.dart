@@ -11,5 +11,7 @@ abstract class LocationRepository {
   Future<LocationPermissionStatus> checkPermission();
   Future<LocationPermissionStatus> requestPermission();
   Future<LocationData> getCurrentLocation();
+  Future<bool> openAppSettings();
+  Future<bool> openLocationSettings();
   Stream<LocationData> get locationStream;
 }

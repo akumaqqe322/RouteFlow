@@ -17,3 +17,10 @@ class UpdateLocation extends LocationEvent {
   @override
   List<Object?> get props => [latitude, longitude];
 }
+
+class OpenLocationSettings extends LocationEvent {
+  final bool isAppSettings;
+  const OpenLocationSettings({this.isAppSettings = true});
+  @override
+  List<Object?> get props => [isAppSettings];
+}

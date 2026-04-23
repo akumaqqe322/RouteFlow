@@ -16,6 +16,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final MapController _mapController = MapController();
+  // Falling back to a product-appropriate high-level view (London)
+  static const LatLng _fallbackLocation = LatLng(51.5074, -0.1278);
+
+  @override
+  void initState() {
+    super.initState();
+    // Move permission request to the map feature lifecycle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<LocationBloc>().add(RequestLocationPermission());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (state.status == LocationStatus.servicesDisabled) {
+            return const _ServicesDisabledView();
+          }
+
           if (state.status == LocationStatus.permissionDenied || 
               state.status == LocationStatus.permissionPermanentlyDenied) {
             return _PermissionDeniedView(
@@ -50,8 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 options: MapOptions(
                   initialCenter: state.location != null
                       ? LatLng(state.location!.latitude, state.location!.longitude)
-                      : const LatLng(0, 0),
-                  initialZoom: 13.0,
+                      : _fallbackLocation,
+                  initialZoom: state.location != null ? 15.0 : 10.0,
                 ),
                 children: [
                   TileLayer(
@@ -91,6 +106,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class _ServicesDisabledView extends StatelessWidget {
+  const _ServicesDisabledView();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return _ErrorOverlayView(
+      icon: Icons.location_disabled,
+      title: l10n.mapServicesDisabledTitle,
+      description: l10n.mapServicesDisabledDesc,
+      buttonLabel: l10n.mapServicesDisabledBtn,
+      onPressed: () => context.read<LocationBloc>().add(const OpenLocationSettings(isAppSettings: false)),
+    );
+  }
+}
+
 class _PermissionDeniedView extends StatelessWidget {
   final bool isPermanent;
 
@@ -100,27 +132,57 @@ class _PermissionDeniedView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    return _ErrorOverlayView(
+      icon: Icons.location_off,
+      title: l10n.mapPermissionTitle,
+      description: isPermanent ? l10n.mapPermissionPermanentlyDenied : l10n.mapPermissionDesc,
+      buttonLabel: isPermanent ? l10n.mapServicesDisabledBtn : l10n.mapPermissionBtn,
+      onPressed: () {
+        if (isPermanent) {
+          context.read<LocationBloc>().add(const OpenLocationSettings(isAppSettings: true));
+        } else {
+          context.read<LocationBloc>().add(RequestLocationPermission());
+        }
+      },
+    );
+  }
+}
+
+class _ErrorOverlayView extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final String buttonLabel;
+  final VoidCallback onPressed;
+
+  const _ErrorOverlayView({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.buttonLabel,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(32.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.location_off, size: 80, color: Colors.grey),
+          Icon(icon, size: 80, color: Colors.grey),
           const SizedBox(height: 24),
           Text(
-            l10n.mapPermissionTitle,
+            title,
             style: Theme.of(context).textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          Text(
-            isPermanent ? l10n.mapPermissionPermanentlyDenied : l10n.mapPermissionDesc,
-            textAlign: TextAlign.center,
-          ),
+          Text(description, textAlign: TextAlign.center),
           const SizedBox(height: 32),
           ElevatedButton(
-            onPressed: () => context.read<LocationBloc>().add(RequestLocationPermission()),
-            child: Text(l10n.mapPermissionBtn),
+            onPressed: onPressed,
+            child: Text(buttonLabel),
           ),
         ],
       ),

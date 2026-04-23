@@ -19,7 +19,7 @@ class RouteFlowApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => getIt<AuthBloc>()),
         BlocProvider(create: (context) => getIt<OnboardingCubit>()),
-        BlocProvider(create: (context) => getIt<LocationBloc>()..add(RequestLocationPermission())),
+        BlocProvider(create: (context) => getIt<LocationBloc>()),
       ],
       child: MaterialApp.router(
         title: 'RouteFlow',

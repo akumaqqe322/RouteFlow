@@ -40,6 +40,9 @@
   "mapPermissionBtn": "Enable Location",
   "mapPermissionDenied": "Location permission denied. Feature limited.",
   "mapPermissionPermanentlyDenied": "Location permission is permanently denied. Please enable it in system settings.",
+  "mapServicesDisabledTitle": "Location Services Disabled",
+  "mapServicesDisabledDesc": "Location services are disabled on your device. Please turn them on in system settings.",
+  "mapServicesDisabledBtn": "Open System Settings",
   "mapLocationRetry": "Retry",
   "mapMyLocation": "My Location"
 }

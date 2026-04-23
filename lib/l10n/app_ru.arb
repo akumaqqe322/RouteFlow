@@ -40,6 +40,9 @@
   "mapPermissionBtn": "Включить локацию",
   "mapPermissionDenied": "В доступе к локации отказано. Функционал ограничен.",
   "mapPermissionPermanentlyDenied": "Доступ к локации заблокирован навсегда. Пожалуйста, включите его в настройках системы.",
+  "mapServicesDisabledTitle": "Геолокация отключена",
+  "mapServicesDisabledDesc": "Службы геолокации отключены на вашем устройстве. Пожалуйста, включите их в настройках системы.",
+  "mapServicesDisabledBtn": "Открыть системные настройки",
   "mapLocationRetry": "Повторить",
   "mapMyLocation": "Мое местоположение"
 }

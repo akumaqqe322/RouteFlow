@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:route_flow/features/map_routing/domain/entities/location_data.dart';
 import 'package:route_flow/features/map_routing/domain/repositories/location_repository.dart';
+import 'package:route_flow/core/error/location_failure.dart';
 
 @LazySingleton(as: LocationRepository)
 class GeolocatorLocationRepository implements LocationRepository {
@@ -22,9 +23,26 @@ class GeolocatorLocationRepository implements LocationRepository {
 
   @override
   Future<LocationData> getCurrentLocation() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) throw const LocationDisabledFailure();
+
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      throw const LocationPermissionDeniedFailure();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      throw const LocationPermissionPermanentlyDeniedFailure();
+    }
+
     final position = await Geolocator.getCurrentPosition();
     return LocationData(latitude: position.latitude, longitude: position.longitude);
   }
+
+  @override
+  Future<bool> openAppSettings() => Geolocator.openAppSettings();
+
+  @override
+  Future<bool> openLocationSettings() => Geolocator.openLocationSettings();
 
   @override
   Stream<LocationData> get locationStream => 
