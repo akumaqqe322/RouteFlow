@@ -65,5 +65,10 @@
   "myRoutesDeleteConfirm": "Вы уверены, что хотите удалить этот маршрут?",
   "myRoutesRename": "Переименовать",
   "myRoutesDelete": "Удалить",
-  "myRoutesRenameDialogTitle": "Переименовать маршрут"
+  "myRoutesRenameDialogTitle": "Переименовать маршрут",
+  "errorAuthRequired": "Войдите в систему, чтобы получить доступ к маршрутам.",
+  "errorStorageFailed": "Ошибка при доступе к локальному хранилищу.",
+  "errorSaveFailed": "Не удалось сохранить маршрут в облаке.",
+  "errorDeleteFailed": "Не удалось удалить маршрут.",
+  "errorUnexpected": "Произошла непредвиденная ошибка."
 }

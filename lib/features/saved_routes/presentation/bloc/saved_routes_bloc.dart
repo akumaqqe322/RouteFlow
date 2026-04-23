@@ -27,7 +27,11 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       final routes = await _repository.getRoutes(forceRefresh: event.forceRefresh);
       emit(state.copyWith(status: SavedRoutesStatus.success, routes: routes));
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'storage_error'));
+      if (e is SavedRoutesAuthFailure) {
+        emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'auth_error'));
+      } else {
+        emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'storage_error'));
+      }
     }
   }
 
@@ -35,14 +39,10 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
     SaveBuiltRoute event,
     Emitter<SavedRoutesState> emit,
   ) async {
-    // Note: userId is handled inside the repository's data layer 
-    // or typically fetched from an AuthRepository to keep presentation clean.
-    // For MVP, repository handles it.
-
     final now = DateTime.now();
     final newRoute = SavedRoute(
       id: const Uuid().v4(),
-      userId: '', // Repository will populate this if needed or it's implicitly handled
+      userId: '', 
       title: event.title,
       startLat: event.start.latitude,
       startLng: event.start.longitude,
@@ -76,7 +76,7 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       await _repository.updateRoute(updated);
       add(const LoadSavedRoutes());
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: e.toString()));
+      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'storage_error'));
     }
   }
 
@@ -92,7 +92,7 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       await _repository.updateRoute(updated);
       add(const LoadSavedRoutes());
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: e.toString()));
+      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'storage_error'));
     }
   }
 
@@ -104,7 +104,7 @@ class SavedRoutesBloc extends Bloc<SavedRoutesEvent, SavedRoutesState> {
       await _repository.deleteRoute(event.id);
       add(const LoadSavedRoutes());
     } catch (e) {
-      emit(state.copyWith(status: SavedRoutesStatus.failure, error: e.toString()));
+      emit(state.copyWith(status: SavedRoutesStatus.failure, error: 'delete_error'));
     }
   }
 }

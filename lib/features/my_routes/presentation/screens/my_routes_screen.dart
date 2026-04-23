@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:route_flow/features/map_routing/presentation/bloc/route_bloc.dart';
+import 'package:route_flow/features/map_routing/presentation/bloc/route_event.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_bloc.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_event.dart';
 import 'package:route_flow/features/saved_routes/presentation/bloc/saved_routes_state.dart';
@@ -24,7 +27,42 @@ class MyRoutesScreen extends StatelessWidget {
           }
 
           if (state.status == SavedRoutesStatus.failure && state.routes.isEmpty) {
-            return Center(child: Text(state.error ?? 'Error'));
+            String errorMsg;
+            switch (state.error) {
+              case 'auth_error':
+                errorMsg = l10n.errorAuthRequired;
+                break;
+              case 'storage_error':
+                errorMsg = l10n.errorStorageFailed;
+                break;
+              case 'save_error':
+                errorMsg = l10n.errorSaveFailed;
+                break;
+              case 'delete_error':
+                errorMsg = l10n.errorDeleteFailed;
+                break;
+              default:
+                errorMsg = l10n.errorUnexpected;
+            }
+
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+                    const SizedBox(height: 16),
+                    Text(errorMsg, textAlign: TextAlign.center),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () => context.read<SavedRoutesBloc>().add(const LoadSavedRoutes(forceRefresh: true)),
+                      child: Text(l10n.mapLocationRetry),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           if (state.routes.isEmpty) {

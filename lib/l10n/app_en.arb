@@ -65,5 +65,10 @@
   "myRoutesDeleteConfirm": "Are you sure you want to delete this route?",
   "myRoutesRename": "Rename",
   "myRoutesDelete": "Delete",
-  "myRoutesRenameDialogTitle": "Rename Route"
+  "myRoutesRenameDialogTitle": "Rename Route",
+  "errorAuthRequired": "You must be signed in to access saved routes.",
+  "errorStorageFailed": "Failed to access local storage.",
+  "errorSaveFailed": "Failed to save route to cloud.",
+  "errorDeleteFailed": "Failed to delete route.",
+  "errorUnexpected": "An unexpected error occurred."
 }
